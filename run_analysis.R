@@ -15,8 +15,14 @@
 #/UCI HAR Dataset/features.txt
 #/UCI HAR Dataset/features_info.txt
 #/UCI HAR Dataset/README.txt        
-#/UCI HAR Dataset/test/ 
-#/UCI HAR Dataset/train/
+#/UCI HAR Dataset/test/subject_test.txt
+#/UCI HAR Dataset/test/X_test.txt
+#/UCI HAR Dataset/test/y_test.txt
+#/UCI HAR Dataset/test/Inertial Signals (UNUSED)
+#/UCI HAR Dataset/train/subject_train.txt
+#/UCI HAR Dataset/train/X_train.txt
+#/UCI HAR Dataset/train/y_test.txt
+#/UCI HAR Dataset/train/Inertial Signals (UNUSED)
 
 #We can easily chech to make sure the folder is in place and set it as the working directory with a simple switch.
 
@@ -113,33 +119,40 @@ if(!require("readr")){
         
 ##4. Appropriately labels the data set with descriptive variable names. 
 
-        # Each feature name is descriptive, but contains an unnessesary leading number, which isn't very tidy.
+        # Each feature name is descriptive, but contains an unnessesary leading number, to be removed.
         # The regular expression (first argument of gsub), finds numbers ([0123456789]) that occur one or more times (+) before a space (" ") 
         # and gsub replaces it with "" (no characters)
         old_feature_names <- colnames(labeled_extracted_df)
         tidy_feature_names <- gsub("[0123456789]+ ", "", old_feature_names )
         colnames(labeled_extracted_df) <- tidy_feature_names
         
+        # let's save this tidy data set
+        write.table(labeled_extracted_df, "tidy_data_set.csv")
+        
         
 ##5. From the data set in step 4, create a second, independent tidy data set with the average of each variable for each activity and each subject.
         
         # Our method is to subset labeled_extracted_df on each subject, then each activity, 
         # then build a new dataframe with averages (means) of subsetted data 
-        # there may be a much prettier way to do this, but a good ol' for loop will work, once we create an empty dataframe   
+        # there may be a much more elegant way to do this.
+        # The results are attached to an initially empty dataframe   
         
         # begin by creating an empty dataframe of the appropriate width to rbind our results to, after every loop
         final_results_df <-as.data.frame( rep( list(double(0)), each = length(labeled_extracted_df)) )
         
-        # now the heavy lifting
+        # now the heavy lifting...
+        
+        # get count of unique values in the "Subject" column and loop that many times
         for(i in 1:length(unique(labeled_extracted_df$"Subject"))){
              
-             
+             #of the vector of unique values in "Subject" select the i-th one of them
              subject_val <- unique(labeled_extracted_df$"Subject")[i]     
-               
+             
+             #subset labeled_extracted_df, for all rows containing the specific unique.  
              subject_df <- labeled_extracted_df[ labeled_extracted_df$"Subject"==subject_val, ]
                 
              
-             
+             #repeat this above process for unique values in "Activity_Label", subsetting the previously subset dataframe
              for(j in 1:length(unique(labeled_extracted_df$"Activity_Label"))) {
                      
                      activity_val <- unique(labeled_extracted_df$"Activity_Label")[j]
@@ -147,16 +160,22 @@ if(!require("readr")){
                      sub_act_df <- subject_df[ subject_df$"Activity_Label"==activity_val,]
                      
                                                    
-                                                     
+                     # This if test is proably unnessesary, but it makes sure we are not adding empty rows to the dataframe
+                     # Empty rows would be a result of certain subjects not performing certain activities                               
                      if(length(sub_act_df) > 0){
+                             
+                             #non-averaging columns are removed so the remaining columns may be easily averaged
                              sub_act_df <- within(sub_act_df, rm("Activity_Label"))
                              sub_act_df <- within(sub_act_df, rm("Subject"))
                      
-                                avgs_df <- rbind(colMeans(sub_act_df))
+                             #create single row dataframe of avaerage of columns
+                             avgs_df <- rbind(colMeans(sub_act_df))
                      
-                                avgs_df <- cbind("activity" = as.character(activity_val), "subject" = subject_val, avgs_df)
+                             #reattach "activity" and "subject" value rows
+                             avgs_df <- cbind("activity" = as.character(activity_val), "subject" = as.numeric(subject_val), as.numeric(avgs_df))
                      
-                                final_results_df <- rbind(final_results_df, avgs_df)
+                             #attach averaged results to results dataframe
+                             final_results_df <- rbind(final_results_df, avgs_df)
                      }
                      
              }  
@@ -164,6 +183,6 @@ if(!require("readr")){
                 
         }
         
-        write.csv(final_results_df, "average_of_variables.csv")
+        write.table(final_results_df, "average_variables_per_subject_and_activity.csv")
         
      
