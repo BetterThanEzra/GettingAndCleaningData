@@ -241,7 +241,7 @@ Our method is to subset `labeled_extracted_df` on each subject, then each activi
         final_results_df <-as.data.frame( rep( list(double(0)), each = length(labeled_extracted_df)) )
 ```        
         
-###Alright, now the heavy lifting...
+Alright, now the heavy lifting...
 ```r        
         #Get count of unique values in the "Subject" column and loop that many times.
         
