@@ -308,8 +308,10 @@ Alright, now the heavy lifting...
                 
         }
 
-        #Now write the results to a file and we are finished.
+        #Now write the analysis results and features to files and we are finished.
 
         write.csv(final_results_df, "average_variables_per_subject_and_activity.csv", sep = ",", row.names=FALSE)
+               
+        write_lines(colnames(final_results_df, "analysis_features.txt")
         
 ```
