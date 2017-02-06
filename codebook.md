@@ -1,8 +1,8 @@
-FEATRUE SELECTION
-=================
+##FEATURE SELECTION
 
-Secondary Analysis
-==================
+
+###Secondary Analysis
+
 A secondary analysis was performed on the Intial Analysis Dataset. 
 
 Training and test data was recombined, along with corresponding activity and subject data. Activity codes were replaced with corresponding labels. All variables based on estimations of mean and standard deviation we kept.
@@ -10,15 +10,16 @@ Training and test data was recombined, along with corresponding activity and sub
 Finally, values for each feature were averaged for activity performed by each subject. 
 
 
-Features
-========
-
+###Features
+Features are represented in the following way:
+```
 example_feature
        feature_contents
+```
 
+####Features of Secondary Analysis in "average_variables_per_subject_and_activity.csv"
 
-Features of Secondary Analysis in "average_variables_per_subject_and_activity.csv":
-
+```
 
 activity 
        WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING
@@ -196,7 +197,7 @@ fBodyBodyGyroMag-std()
       decimal (-1,1)
 fBodyBodyGyroJerkMag-std()
       decimal (-1,1)
-
+```
 
 The list of variables of each feature vector is also available in 'analysis_features.txt'
 
