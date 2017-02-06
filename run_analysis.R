@@ -255,6 +255,8 @@ if(!require("readr")){
                 
         }
         
+        #save results of analysis to .csv file
         write.csv(final_results_df, "average_variables_per_subject_and_activity.csv", sep = ",", row.names=FALSE)
         
-     
+        #save features of analysis to .txt file
+        write_lines(colnames(final_results_df, "analysis_features.txt")
