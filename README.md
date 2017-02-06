@@ -232,13 +232,14 @@ Nice! Now...
       
 ##5. From the data set in step 4, create a second, independent tidy data set with the average of each variable for each activity and each subject.
      
-Our method is to subset labeled_extracted_df on each subject, then each activity, then build a new dataframe with averages (means) of the subsetted data. Given's R's many elegant conveniences, there may be a more compact way to do this, but the good 'ol, nested `for` loop will get the job done, and is easily readable.
+Our method is to subset `labeled_extracted_df` on each subject, then each activity, then build a new dataframe with averages (means) of the subsetted data. Given's R's many elegant conveniences, there may be a more compact way to do this, but the good 'ol, nested `for` loop will get the job done, and is easily readable.
 
+```r
         #The results are attached to an initially empty dataframe, so begin by creating an empty dataframe of the 
         #appropriate width to `rbind` our results to, after every loop.
         
         final_results_df <-as.data.frame( rep( list(double(0)), each = length(labeled_extracted_df)) )
-        
+```        
         
 ###Alright, now the heavy lifting...
 ```r        
@@ -262,11 +263,12 @@ Our method is to subset labeled_extracted_df on each subject, then each activity
                             activity_val <- unique(labeled_extracted_df$"Activity_Label")[j]
                      
                             sub_act_df <- subject_df[ subject_df$"Activity_Label"==activity_val,]
-```                     
-                                                   
-This `if` test is proably unnessesary, but it makes sure we are not adding empty rows to the dataframe. Empty rows would be a result of certain subjects not performing certain activities.                          
+                    
+                            
+                            
+                            #This `if` test is proably unnessesary, but it makes sure we are not adding empty rows to the dataframe.
+                            #Empty rows would be a result of certain subjects not performing certain activities.                         
 
-```r
                             if(length(sub_act_df) > 0){
                              
                                       #Non-averaging columns are removed so the remaining columns may be easily averaged.
@@ -306,7 +308,8 @@ This `if` test is proably unnessesary, but it makes sure we are not adding empty
                 
         }
 
-Now write the results to a file and we are finished.
+        #Now write the results to a file and we are finished.
 
         write.csv(final_results_df, "average_variables_per_subject_and_activity.csv", sep = ",", row.names=FALSE)
         
+```
