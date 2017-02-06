@@ -255,7 +255,7 @@ if(!require("readr")){
                 
         }
         
-        #save results of analysis to .csv file
+        #save results of analysis to .txt file
         
         write.table(final_results_df, "average_variables_per_subject_and_activity.txt", sep = ",", row.names=FALSE)
         
